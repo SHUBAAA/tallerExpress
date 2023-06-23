@@ -8,6 +8,7 @@ import Product from "../models/producto.model.js";
         const fecha = req.body.fecha;
         const categoria = req.body.categoria;
         const cantidad = req.body.cantidad;
+        const precio = req.body.precio;
        
 
         if (!name) {
@@ -24,7 +25,7 @@ import Product from "../models/producto.model.js";
         }
 
 
-      const productCreated = await Product.create({ name: name, fecha: fecha, categoria: categoria, cantidad: cantidad});
+      const productCreated = await Product.create({ name: name, fecha: fecha, categoria: categoria, cantidad: cantidad, precio: precio});
       return res.status(200).json({ success: true, user: productCreated });
     } catch (err) {
         return res.status(500).json({ success: false, message: 'Error al crear el producto', error: err.message });
@@ -41,6 +42,7 @@ import Product from "../models/producto.model.js";
   }
   async function deleteProductById(req, res) {
     try {
+  
       const productId = req.params.productId;
       const product = await Product.deleteOne({ _id: productId });
       res.send(product);
@@ -48,4 +50,19 @@ import Product from "../models/producto.model.js";
       res.status(500).send(err);
     }
   }
-  export { createProduct, getProduct, deleteProductById };
+  async function updateProductById(req, res) {
+    try {
+      const productId = req.params.productId;
+      const name = req.body.name;
+      const fecha = req.body.fecha;
+      const categoria = req.body.categoria;
+      const cantidad = req.body.cantidad;
+      const precio = req.body.precio;
+    
+      const productUpdated = await Product.updateOne({ _id: productId }, { name, fecha, categoria, cantidad, precio });
+      res.send(productUpdated);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  }
+  export { createProduct, getProduct, deleteProductById, updateProductById };
