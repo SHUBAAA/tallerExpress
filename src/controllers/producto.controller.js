@@ -1,14 +1,13 @@
 import Product from "../models/producto.model.js";
-import bcrypt from 'bcrypt';
 
 
   async function createProduct(req, res) {
     try {
         
         const name = req.body.name;
-        const fecha = req.body.email;
-        const categoria = req.body.dni;
-        const cantidad = req.body.password;
+        const fecha = req.body.fecha;
+        const categoria = req.body.categoria;
+        const cantidad = req.body.cantidad;
        
 
         if (!name) {
@@ -43,7 +42,7 @@ import bcrypt from 'bcrypt';
   async function deleteProductById(req, res) {
     try {
       const productId = req.params.productId;
-      const product = await UserModel.deleteOne({ _id: productId });
+      const product = await Product.deleteOne({ _id: productId });
       res.send(product);
     } catch (err) {
       res.status(500).send(err);
