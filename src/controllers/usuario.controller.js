@@ -27,7 +27,7 @@ async function createUser(req, res) {
             return res.status(400).send({ message: "ERROR⚠️ Falta Rol" })
         }
 
-        const usuarioCreated = await usuarioModel.create({ name: name, email: email, rut: rut, rol: rol, contrasena: contrasena });
+        const usuarioCreated = await usuarioModel.create({ name: name, email: email, rut: rut, rol: rol, contrasena: encryptedPassword });
         res.send(usuarioCreated);
     } catch (err) {
         res.status(500).send(err);
