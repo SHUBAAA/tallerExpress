@@ -3,7 +3,6 @@ import {
 
     createProduct,
     getProduct,
-    getProductById,
     deleteProductById,
     updateProductById,
 } from '../controllers/producto.controller.js';

@@ -2,10 +2,11 @@ import express from 'express';
 import productRoutes from './routes/producto.routes.js';
 import envs from './configs/environments.js';
 import connect from './configs/mongo.js';
+import usuarioRoutes from "./routes/usuarios.routes.js"
 
 const app = express();
 
-app.use(cors());
+
 app.use(express.json());
 
 app.use('', productRoutes);
