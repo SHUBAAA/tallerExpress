@@ -1,6 +1,5 @@
 import express from 'express';
 import productRoutes from './routes/producto.routes.js';
-import cors from 'cors';
 import envs from './configs/environments.js';
 import connect from './configs/mongo.js';
 
@@ -10,13 +9,16 @@ app.use(cors());
 app.use(express.json());
 
 app.use('', productRoutes);
+app.use('', usuarioRoutes);
+
 
 console.log('Connecting to database...');
-connect()
+console.log(envs.MONGO_URI);
+connect(envs.MONGO_URI)
   .then(() => {
     console.log('Mongo connected successful');
     app.listen(3000, async () => {
-      console.log(Server is running on PORT: 3000);
+      console.log(`Server is running on PORT: 3000`);
     });
   })
   .catch((err) => {
