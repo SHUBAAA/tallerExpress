@@ -1,18 +1,18 @@
-import Product from "../models/producto.model.js";
+import productModel from "../models/producto.model.js";
 
 
 async function createProduct(req, res) {
     try {
 
-        const name = req.body.name;
+        const nombre = req.body.nombre;
         const fecha = req.body.fecha;
         const categoria = req.body.categoria;
         const cantidad = req.body.cantidad;
         const precio = req.body.precio;
 
 
-        if (!name) {
-            return res.status(400).json({ success: false, message: 'Falta el campo name' });
+        if (!nombre) {
+            return res.status(400).json({ success: false, message: 'Falta el campo nombre' });
         }
         if (!fecha) {
             return res.status(400).json({ success: false, message: 'Falta el campo fecha' });
@@ -25,8 +25,8 @@ async function createProduct(req, res) {
         }
 
 
-        const productCreated = await Product.create({ name: name, fecha: fecha, categoria: categoria, cantidad: cantidad, precio: precio });
-        return res.status(200).json({ success: true, user: productCreated });
+        const productCreated = await productModel.create({ nombre: nombre, fecha: fecha, categoria: categoria, cantidad: cantidad, precio: precio });
+        return res.status(200).json({ success: true });
     } catch (err) {
         return res.status(500).json({ success: false, message: 'Error al crear el producto', error: err.message });
     }
@@ -34,7 +34,7 @@ async function createProduct(req, res) {
 
 async function getProduct(req, res) {
     try {
-        const product = await Product.find({});
+        const product = await productModel.find({});
         return res.send(product);
     } catch (err) {
         return res.status(500).json({ success: false, message: 'Error al obtener producto', error: err.message });
@@ -44,7 +44,7 @@ async function deleteProductById(req, res) {
     try {
 
         const productId = req.params.productId;
-        const product = await Product.deleteOne({ _id: productId });
+        const product = await productModel.deleteOne({ _id: productId });
         res.send(product);
     } catch (err) {
         res.status(500).send(err);
@@ -53,13 +53,13 @@ async function deleteProductById(req, res) {
 async function updateProductById(req, res) {
     try {
         const productId = req.params.productId;
-        const name = req.body.name;
+        const nombre = req.body.nombre;
         const fecha = req.body.fecha;
         const categoria = req.body.categoria;
         const cantidad = req.body.cantidad;
         const precio = req.body.precio;
 
-        const productUpdated = await Product.updateOne({ _id: productId }, { name, fecha, categoria, cantidad, precio });
+        const productUpdated = await productModel.updateOne({ _id: productId }, { nombre: nombre, fecha: fecha, categoria: categoria, cantidad, precio });
         res.send(productUpdated);
     } catch (err) {
         res.status(500).send(err);

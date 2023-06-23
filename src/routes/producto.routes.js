@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-
     createProduct,
     getProduct,
     deleteProductById,
@@ -10,6 +9,6 @@ import {
 const router = Router();
 router.get('/bodega', getProduct);
 router.post('/crearproducto', createProduct);
-router.delete('/bodega/:productoid', deleteProductById);
-router.put('/modprod/:productoid', updateProductById);
+router.delete('/bodega/:productId', deleteProductById);
+router.put('/modprod/:productId', updateProductById);
 export default router;
