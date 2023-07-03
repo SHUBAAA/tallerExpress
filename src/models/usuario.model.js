@@ -13,6 +13,7 @@ const usuarioSchema = new mongoose.Schema({
     contrasena: {
         type: String,
         required: true,
+        select: false
     },
     rut: {
         type: String,

@@ -1,6 +1,8 @@
 import usuarioModel from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
 import validarRut from "../services/validadorRut.js"
+import { generateToken, verifyToken } from "../services/jwt.js";
+
 
 
 async function createUser(req, res) {
@@ -108,5 +110,37 @@ async function changePass(req, res) {
     }
 }
 
+async function login(req, res) {
 
-export { createUser, listUsers, updateUser, deleteUser, changePass }
+    const contrasena = req.body.contrasena;
+    const user = await usuarioModel.findOne({ email: req.body.email })
+        .select("+contrasena")
+        .exec();
+
+
+    if (!user) {
+        return res.status(404).json({ error: "usuario no encontrado" });
+    }
+
+    if (!contrasena) {
+        return res.status(500).send({ error: "falta contraseña" });
+    }
+
+
+    const passwordIsCorrect = await bcrypt.compare(
+        contrasena,
+        user.contrasena
+    );
+
+
+
+    if (!passwordIsCorrect) {
+        return res.status(400).json({ error: "contrasena invalida" });
+    }
+
+    const token = generateToken(user);
+
+    return res.status(200).json({ user, token });
+}
+
+export { createUser, listUsers, updateUser, deleteUser, changePass, login }
