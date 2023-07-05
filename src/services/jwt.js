@@ -5,7 +5,6 @@ const { SECRET } = environment;
 
 export function generateToken(user) {
     const { _id, email } = user;
-    console.log(SECRET)
     return jsonwebtoken.sign({ id: _id, email }, SECRET, {
         expiresIn: "15m",
     });

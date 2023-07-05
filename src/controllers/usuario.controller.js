@@ -143,4 +143,14 @@ async function login(req, res) {
     return res.status(200).json({ user, token });
 }
 
-export { createUser, listUsers, updateUser, deleteUser, changePass, login }
+async function sesionActual(req, res) {
+    try {
+        const user = await usuarioModel.findById(req.id).exec();
+
+        return res.status(200).json({ user });
+    } catch (err) {
+        return res.status(403).json(err);
+    }
+}
+
+export { createUser, listUsers, updateUser, deleteUser, changePass, login, sesionActual }
