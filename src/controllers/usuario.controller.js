@@ -140,7 +140,7 @@ async function login(req, res) {
 
     const token = generateToken(user);
 
-    return res.status(200).json({ user, token });
+    return res.status(200).json({token});
 }
 
 async function sesionActual(req, res) {
