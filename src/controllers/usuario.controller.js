@@ -65,6 +65,10 @@ async function deleteUser(req, res) {
         if (userId === "64a634bef6928f6274d30499") {
             return res.status(400).send({ message: "ERROR NO PUEDES BORRAR A MANOLO" })
         }
+
+        if (userId === req.id) {
+            return res.status(400).send({ message: "ERROR TE PUEDES ELIMINAR A TI MISMO" })
+        }
         const user = await usuarioModel.deleteOne({ _id: userId });
         res.send(user);
     } catch (err) {
