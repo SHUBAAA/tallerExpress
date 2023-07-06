@@ -1,7 +1,7 @@
 import usuarioModel from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
 import validarRut from "../services/validadorRut.js"
-import { generateToken, verifyToken } from "../services/jwt.js";
+import { generateToken } from "../services/jwt.js";
 
 
 
