@@ -20,7 +20,7 @@ export function authRequired(req, res, next) {
     } catch (error) {
         return res
             .status(403)
-            .send({ error: "no tienes los permisos (falta token o esta expirado)" });
+            .send({ message: "Falta token o esta expirado" });
     }
 }
 
@@ -32,7 +32,7 @@ export async function hasRole(req, res, next) {
         return next();
     }
 
-    return res.status(401).send({ error: `El usuario no tiene el rol requerido` });
+    return res.status(401).send({ message: `El usuario no tiene el rol requerido` });
 }
 
 
