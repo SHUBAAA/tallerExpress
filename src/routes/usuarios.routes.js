@@ -23,7 +23,7 @@ router.post("/registrar", authRequired, hasAdmin, createUser);
 router.post("/login", login);
 router.get("/usuarios", authRequired, hasAdmin, listUsers);
 router.get("/usuarios/:userId", authRequired, hasAdmin, getUser);
-router.delete("/admin/:userId", authRequired, hasAdmin, deleteUser);
+router.delete("/delete/:userId", authRequired, hasAdmin, deleteUser);
 router.put("/modusr/:userId", authRequired, hasAdmin, updateUser);
 router.put("/modpass/:userId", authRequired, hasAdmin, changePass);
 router.get("/me", authRequired, sesionActual);

@@ -47,5 +47,5 @@ export async function hasAdmin(req, res, next) {
         return next();
     }
 
-    return res.status(401).send({ error: `El usuario no es Administrador` });
+    return res.status(401).send({ message: `El usuario no es Administrador` });
 }
