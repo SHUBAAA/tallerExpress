@@ -39,7 +39,7 @@ async function createUser(req, res) {
             return res.status(400).send({ success: false, message: "ERROR⚠️ Rol Invalido" });
         }
 
-        const usuarioCreated = await usuarioModel.create({ nombre: nombre, email: email, rut: rut, rol: rol, contrasena: encryptedPassword });
+        const usuarioCreated = await usuarioModel.create({ nombre: nombre, email: email, rut: rut, rol: rol.toUpperCase(), contrasena: encryptedPassword });
         res.send({ success: true });
     } catch (err) {
         res.status(500).send(err);
@@ -87,7 +87,7 @@ async function updateUser(req, res) {
         if (!["CAJERO", "BODEGUERO", "ADMIN"].includes(rol.toUpperCase())) {
             return res.status(400).send({ success: false, message: "ERROR⚠️ Rol Invalido" });
         }
-        const user = await usuarioModel.updateOne({ _id: userId }, { nombre: nombre, email: email, rol: rol });
+        const user = await usuarioModel.updateOne({ _id: userId }, { nombre: nombre, email: email, rol: rol.toUpperCase() });
         res.send(user);
     } catch (err) {
         res.status(500).send(err);
@@ -140,7 +140,7 @@ async function login(req, res) {
 
     const token = generateToken(user);
 
-    return res.status(200).json({token});
+    return res.status(200).json({ token });
 }
 
 async function sesionActual(req, res) {
@@ -153,4 +153,15 @@ async function sesionActual(req, res) {
     }
 }
 
-export { createUser, listUsers, updateUser, deleteUser, changePass, login, sesionActual }
+async function getUser(req, res) {
+    try {
+        const userId = req.params.userId;
+        const user = await usuarioModel.findOne({ _id: userId })
+        res.send(user)
+    } catch (err) {
+        res.status(500).send(err);
+    }
+
+}
+
+export { createUser, listUsers, updateUser, deleteUser, changePass, login, sesionActual, getUser }
