@@ -1,14 +1,11 @@
-import productModel from "../models/producto.model.js";
-
+import { productModel, boletaModel, carritoModel } from "../models/producto.model.js";
 
 async function createProduct(req, res) {
     try {
-
         const nombre = req.body.nombre;
         const categoria = req.body.categoria;
         const cantidad = req.body.cantidad;
         const precio = req.body.precio;
-
 
         if (!nombre) {
             return res.status(400).json({ success: false, message: 'Falta el campo nombre' });
@@ -19,7 +16,6 @@ async function createProduct(req, res) {
         if (!cantidad) {
             return res.status(400).json({ success: false, message: 'Falta el campo cantidad' });
         }
-
 
         const productCreated = await productModel.create({ nombre: nombre, categoria: categoria, cantidad: cantidad, precio: precio });
         return res.status(200).json({ success: true });
@@ -36,9 +32,9 @@ async function getProduct(req, res) {
         return res.status(500).json({ success: false, message: 'Error al obtener producto', error: err.message });
     }
 }
+
 async function deleteProductById(req, res) {
     try {
-
         const productId = req.params.productId;
         const product = await productModel.deleteOne({ _id: productId });
         res.send(product);
@@ -46,6 +42,7 @@ async function deleteProductById(req, res) {
         res.status(500).send(err);
     }
 }
+
 async function updateProductById(req, res) {
     try {
         const productId = req.params.productId;
@@ -60,14 +57,88 @@ async function updateProductById(req, res) {
         res.status(500).send(err);
     }
 }
+
 async function getProductById(req, res) {
     try {
         const prodId = req.params.prodId;
-        const producto = await productModel.findOne({ _id: prodId })
-        res.send(producto)
+        const producto = await productModel.findOne({ _id: prodId });
+        res.send(producto);
     } catch (err) {
         res.status(500).send(err);
     }
-
 }
-export { createProduct, getProduct, deleteProductById, updateProductById, getProductById };
+
+async function venderProducto(req, res) {
+    const { productoId, cantidad } = req.body;
+
+    try {
+
+        const producto = await productModel.findById(productoId);
+
+        if (!producto) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        if (producto.cantidad < cantidad) {
+            return res.status(400).json({ message: 'No hay suficiente cantidad disponible' });
+        }
+
+
+        producto.cantidad -= cantidad;
+
+
+        await producto.save();
+
+        const carritoItem = new carritoModel({
+            nombre: producto.nombre,
+            categoria: producto.categoria,
+            cantidad: cantidad,
+            precio: producto.precio
+        });
+        await carritoItem.save();
+
+        res.status(200).json({ message: 'Venta realizada con éxito' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al realizar la venta' });
+    }
+};
+
+async function getCarrito(req, res) {
+    try {
+        const product = await carritoModel.find({});
+        return res.send(product);
+    } catch (err) {
+        return res.status(500).json({ success: false, message: 'Error al obtener producto', error: err.message });
+    }
+}
+
+async function guardarCarritoEnBoleta(req, res) {
+    try {
+        const carrito = await carritoModel.find({});
+
+        if (carrito.length === 0) {
+            return res.status(400).json({ message: 'El carrito de compra está vacío' });
+        }
+
+        const totalVenta = carrito.reduce((total, item) => total + item.precio * item.cantidad, 0);
+
+        const boleta = new boletaModel({
+            productos: carrito,
+            totalVenta: totalVenta, 
+        });
+
+        await boleta.save();
+        await carritoModel.deleteMany({}); 
+
+        res.status(200).json({ message: 'Carrito guardado en boleta con éxito' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al guardar el carrito en la boleta' });
+    }
+}
+
+
+
+
+export { createProduct, getProduct, deleteProductById, updateProductById, getProductById, venderProducto, getCarrito, guardarCarritoEnBoleta };

@@ -22,6 +22,22 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const productModel = mongoose.model('Product', productSchema);
+const boletaSchema = new mongoose.Schema(
+  {
+    productos: {
+      type: [productSchema],
+      required: true,
+    },
+    totalVenta: {
+      type: Number,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-export default productModel;
+const productModel = mongoose.model('Producto', productSchema);
+const boletaModel = mongoose.model('Boleta', boletaSchema);
+const carritoModel = mongoose.model('Carrito', productSchema)
+
+export { productModel, boletaModel, carritoModel };
