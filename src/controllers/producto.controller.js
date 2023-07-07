@@ -1,3 +1,4 @@
+import nodemailer from 'nodemailer';
 import { productModel, boletaModel, carritoModel } from "../models/producto.model.js";
 
 async function createProduct(req, res) {
@@ -131,12 +132,20 @@ async function guardarCarritoEnBoleta(req, res) {
         await boleta.save();
         await carritoModel.deleteMany({});
 
+        const correoDestinatario = req.body.correo;
+
+        if (correoDestinatario) {
+            sendMail(boleta, correoDestinatario);
+        }
+
         res.status(200).json({ message: 'Carrito guardado en boleta con éxito' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al guardar el carrito en la boleta' });
     }
 }
+
+
 
 async function eliminarProducto(req, res) {
     try {
@@ -161,6 +170,41 @@ async function getBoleta(req, res) {
     } catch (err) {
         return res.status(500).json({ success: false, message: 'Error al obtener Boleta' });
     }
+}
+
+function sendMail(boleta, correoDestinatario) {
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 's.lefiqueo01@ufromail.cl',
+            pass: 'saul2022'
+        }
+    });
+
+    let body = 'Detalle de la boleta:\n\n';
+    for (const producto of boleta.productos) {
+        body += `Nombre: ${producto.nombre}\n`;
+        body += `Categoria: ${producto.categoria}\n`;
+        body += `Cantidad: ${producto.cantidad}\n`;
+        body += `Precio: $${producto.precio}\n`;
+        body += '\n';
+    }
+    body += `Total Venta: $${boleta.totalVenta}\n`;
+
+    let mailOptions = {
+        from: 'tuEmail@gmail.com',
+        to: correoDestinatario,
+        subject: 'Detalle de tu boleta',
+        text: body
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log('Error al enviar el correo electrónico: ', error);
+        } else {
+            console.log('Correo electrónico enviado: ', info.response);
+        }
+    });
 }
 
 
