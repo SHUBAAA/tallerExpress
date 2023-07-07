@@ -35,7 +35,7 @@ async function createUser(req, res) {
         if (!rol) {
             return res.status(400).send({ success: false, message: "ERROR⚠️ Falta Rol" })
         }
-        if (!["CAJERO", "BODEGUERO", "ADMIN"].includes(rol.toUpperCase())) {
+        if (!["TRABAJADOR", "ADMIN"].includes(rol.toUpperCase())) {
             return res.status(400).send({ success: false, message: "ERROR⚠️ Rol Invalido" });
         }
 
@@ -92,7 +92,7 @@ async function updateUser(req, res) {
         if (!rol) {
             return res.status(400).send({ success: false, message: "ERROR⚠️ Falta Rol" })
         }
-        if (!["CAJERO", "BODEGUERO", "ADMIN"].includes(rol.toUpperCase())) {
+        if (!["TRABAJADOR", "ADMIN"].includes(rol.toUpperCase())) {
             return res.status(400).send({ success: false, message: "ERROR⚠️ Rol Invalido" });
         }
         const user = await usuarioModel.updateOne({ _id: userId }, { nombre: nombre, email: email, rol: rol.toUpperCase() });

@@ -125,11 +125,11 @@ async function guardarCarritoEnBoleta(req, res) {
 
         const boleta = new boletaModel({
             productos: carrito,
-            totalVenta: totalVenta, 
+            totalVenta: totalVenta,
         });
 
         await boleta.save();
-        await carritoModel.deleteMany({}); 
+        await carritoModel.deleteMany({});
 
         res.status(200).json({ message: 'Carrito guardado en boleta con éxito' });
     } catch (error) {
@@ -138,7 +138,30 @@ async function guardarCarritoEnBoleta(req, res) {
     }
 }
 
+async function eliminarProducto(req, res) {
+    try {
+        const productoId = req.body.productoId;
+        const productocarrito = await carritoModel.findById(productoId);
+        const cantidadProductoCarrito = productocarrito.cantidad;
+
+        await productModel.findOneAndUpdate({ nombre: productocarrito.nombre }, { $inc: { cantidad: cantidadProductoCarrito } });
+
+        await carritoModel.deleteOne({ _id: productoId });
+
+        res.status(200).json({ message: 'Producto eliminado del carrito y cantidad devuelta al inventario' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al eliminar producto' });
+    }
+}
+
+async function getBoleta(req, res) {
+    try {
+        const boleta = await boletaModel.find({});
+        return res.send(boleta);
+    } catch (err) {
+        return res.status(500).json({ success: false, message: 'Error al obtener Boleta' });
+    }
+}
 
 
-
-export { createProduct, getProduct, deleteProductById, updateProductById, getProductById, venderProducto, getCarrito, guardarCarritoEnBoleta };
+export { createProduct, getProduct, deleteProductById, updateProductById, getProductById, venderProducto, getCarrito, guardarCarritoEnBoleta, eliminarProducto, getBoleta };

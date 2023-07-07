@@ -26,7 +26,7 @@ export function authRequired(req, res, next) {
 
 export async function hasRole(req, res, next) {
     const { rol } = await usuarioModel.findById(req.id).exec();
-    const validRoles = ["CAJERO", "BODEGUERO", "ADMIN"];
+    const validRoles = ["TRABAJADOR", "ADMIN"];
 
     if (validRoles.includes(rol.toUpperCase())) {
         return next();

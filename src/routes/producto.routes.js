@@ -7,7 +7,9 @@ import {
     getProductById,
     venderProducto,
     getCarrito,
-    guardarCarritoEnBoleta
+    guardarCarritoEnBoleta,
+    eliminarProducto,
+    getBoleta
 } from '../controllers/producto.controller.js';
 
 import {
@@ -25,5 +27,8 @@ router.put('/modprod/:productId', authRequired, hasRole, updateProductById);
 router.post('/venta', authRequired, hasRole, venderProducto);
 router.get('/carrito', authRequired, hasRole, getCarrito);
 router.post('/guardarBoleta', authRequired, hasRole, guardarCarritoEnBoleta);
+router.post('/eliminardeboleta', authRequired, hasRole, eliminarProducto);
+router.get('/boleta', authRequired, hasRole, getBoleta);
+
 
 export default router;
