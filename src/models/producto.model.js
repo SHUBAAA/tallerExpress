@@ -6,10 +6,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    fecha: {
-      type: Date,
-      required: true,
-    },
     categoria: {
       type: String,
       required: true,
