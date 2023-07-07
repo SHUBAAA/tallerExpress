@@ -177,7 +177,7 @@ function sendMail(boleta, correoDestinatario) {
         service: 'gmail',
         auth: {
             user: 's.lefiqueo01@ufromail.cl',
-            pass: 'saul2022'
+            pass: ''
         }
     });
 
